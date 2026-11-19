@@ -1,0 +1,92 @@
+<main class="app-container">
+  <section class="app-card">
+
+    <header class="header">
+      <div class="logo">🎓</div>
+
+      <div>
+        <span class="eyebrow">GESTÃO ACADÊMICA</span>
+        <h1>Lista de Alunos</h1>
+        <p>Cadastre e organize seus alunos de forma simples.</p>
+      </div>
+    </header>
+
+    <section class="form-section">
+      <label for="nomeAluno">Nome do aluno</label>
+
+      <div class="input-group">
+        <input
+          id="nomeAluno"
+          type="text"
+          placeholder="Digite o nome completo"
+          [(ngModel)]="nomeAluno"
+          (keyup.enter)="cadastrarAluno()"
+        />
+
+        <button
+          class="add-button"
+          type="button"
+          (click)="cadastrarAluno()"
+        >
+          <span>+</span>
+          Adicionar
+        </button>
+      </div>
+
+      <small *ngIf="nomeAluno.trim() === ''">
+        Digite um nome para cadastrar um aluno.
+      </small>
+    </section>
+
+    <div class="list-header">
+      <div>
+        <h2>Alunos cadastrados</h2>
+        <p *ngIf="alunos.length > 0">
+          Confira todos os alunos adicionados.
+        </p>
+      </div>
+
+      <span class="counter">{{ alunos.length }}</span>
+    </div>
+
+    <section class="empty-state" *ngIf="alunos.length === 0">
+      <div class="empty-icon">📋</div>
+      <h3>Nenhum aluno cadastrado</h3>
+      <p>Adicione o primeiro aluno usando o campo acima.</p>
+    </section>
+
+    <section class="students-list" *ngIf="alunos.length > 0">
+      <article
+        class="student-item"
+        *ngFor="let aluno of alunos; let i = index"
+      >
+        <div class="student-info">
+          <div class="avatar">
+            {{ aluno.charAt(0).toUpperCase() }}
+          </div>
+
+          <div>
+            <strong>{{ aluno }}</strong>
+            <span>Aluno cadastrado</span>
+          </div>
+        </div>
+
+        <button
+          class="delete-button"
+          type="button"
+          title="Excluir aluno"
+          (click)="excluirAluno(i)"
+        >
+          🗑
+        </button>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <span>Lista atualizada automaticamente</span>
+      <span>•</span>
+      <span>{{ alunos.length }} aluno(s)</span>
+    </footer>
+
+  </section>
+</main>
