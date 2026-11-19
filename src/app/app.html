@@ -1,92 +1,127 @@
-<main class="app-container">
-  <section class="app-card">
+<main class="page-shell">
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
 
-    <header class="header">
-      <div class="logo">🎓</div>
-
-      <div>
-        <span class="eyebrow">GESTÃO ACADÊMICA</span>
-        <h1>Lista de Alunos</h1>
-        <p>Cadastre e organize seus alunos de forma simples.</p>
-      </div>
+  <section class="dashboard">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Painel de alunos">
+        <span class="brand-mark">A</span>
+        <span>Acadêmico<span class="brand-dot">.</span></span>
+      </a>
+      <span class="topbar-label"><span class="status-dot"></span> Painel de gestão</span>
     </header>
 
-    <section class="form-section">
-      <label for="nomeAluno">Nome do aluno</label>
-
-      <div class="input-group">
-        <input
-          id="nomeAluno"
-          type="text"
-          placeholder="Digite o nome completo"
-          [(ngModel)]="nomeAluno"
-          (keyup.enter)="cadastrarAluno()"
-        />
-
-        <button
-          class="add-button"
-          type="button"
-          (click)="cadastrarAluno()"
-        >
-          <span>+</span>
-          Adicionar
-        </button>
-      </div>
-
-      <small *ngIf="nomeAluno.trim() === ''">
-        Digite um nome para cadastrar um aluno.
-      </small>
-    </section>
-
-    <div class="list-header">
+    <section class="welcome">
       <div>
-        <h2>Alunos cadastrados</h2>
-        <p *ngIf="alunos.length > 0">
-          Confira todos os alunos adicionados.
-        </p>
+        <p class="eyebrow">GESTÃO ACADÊMICA</p>
+        <h1>Lista de alunos</h1>
+        <p class="subtitle">Organize sua turma. Acompanhe seus cadastros em um só lugar.</p>
       </div>
-
-      <span class="counter">{{ alunos.length }}</span>
-    </div>
-
-    <section class="empty-state" *ngIf="alunos.length === 0">
-      <div class="empty-icon">📋</div>
-      <h3>Nenhum aluno cadastrado</h3>
-      <p>Adicione o primeiro aluno usando o campo acima.</p>
+      <div class="welcome-icon" aria-hidden="true">✦</div>
     </section>
 
-    <section class="students-list" *ngIf="alunos.length > 0">
-      <article
-        class="student-item"
-        *ngFor="let aluno of alunos; let i = index"
-      >
-        <div class="student-info">
-          <div class="avatar">
-            {{ aluno.charAt(0).toUpperCase() }}
-          </div>
-
-          <div>
-            <strong>{{ aluno }}</strong>
-            <span>Aluno cadastrado</span>
-          </div>
+    <section class="stats-grid" aria-label="Resumo da turma">
+      <article class="stat-card">
+        <span class="stat-icon students-icon">♙</span>
+        <div>
+          <p>Total de alunos</p>
+          <strong>{{ alunos.length }}</strong>
         </div>
-
-        <button
-          class="delete-button"
-          type="button"
-          title="Excluir aluno"
-          (click)="excluirAluno(i)"
-        >
-          🗑
-        </button>
+      </article>
+      <article class="stat-card">
+        <span class="stat-icon activity-icon">↗</span>
+        <div>
+          <p>Status da lista</p>
+          <strong class="stat-status">{{ alunos.length > 0 ? 'Atualizada' : 'Aguardando' }}</strong>
+        </div>
       </article>
     </section>
 
-    <footer class="footer">
-      <span>Lista atualizada automaticamente</span>
-      <span>•</span>
-      <span>{{ alunos.length }} aluno(s)</span>
-    </footer>
+    <section class="content-card">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">CADASTRO</p>
+          <h2>Adicionar aluno</h2>
+        </div>
+        <span class="step-label">01 / Cadastro</span>
+      </div>
 
+      <form class="form-section" (ngSubmit)="cadastrarAluno()">
+        <label for="nomeAluno">Nome completo</label>
+        <div class="input-group">
+          <span class="input-icon" aria-hidden="true">♙</span>
+          <input
+            id="nomeAluno"
+            name="nomeAluno"
+            type="text"
+            placeholder="Ex.: Maria Oliveira"
+            autocomplete="name"
+            [(ngModel)]="nomeAluno"
+          />
+          <button class="add-button" type="submit" [disabled]="!nomeAluno.trim()">
+            <span aria-hidden="true">＋</span>
+            Adicionar aluno
+          </button>
+        </div>
+        <p class="helper-text">Digite o nome e pressione Enter ou clique em adicionar.</p>
+      </form>
+
+      <div class="list-heading">
+        <div>
+          <p class="eyebrow">SUA TURMA</p>
+          <h2>Alunos cadastrados <span class="count-pill">{{ alunos.length }}</span></h2>
+        </div>
+        <div class="search-box" *ngIf="alunos.length > 0">
+          <span aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            name="busca"
+            aria-label="Buscar aluno"
+            placeholder="Buscar aluno..."
+            [(ngModel)]="busca"
+          />
+        </div>
+      </div>
+
+      <section class="empty-state" *ngIf="alunos.length === 0">
+        <div class="empty-illustration" aria-hidden="true">♧</div>
+        <h3>Sua lista está vazia</h3>
+        <p>Adicione o primeiro aluno para começar a organizar sua turma.</p>
+      </section>
+
+      <section class="empty-state compact-empty" *ngIf="alunos.length > 0 && alunosFiltrados.length === 0">
+        <div class="empty-illustration" aria-hidden="true">⌕</div>
+        <h3>Nenhum resultado encontrado</h3>
+        <p>Tente buscar por outro nome.</p>
+      </section>
+
+      <section class="students-list" *ngIf="alunosFiltrados.length > 0">
+        <article class="student-item" *ngFor="let aluno of alunosFiltrados">
+          <div class="student-info">
+            <div class="avatar">{{ aluno.nome.charAt(0).toUpperCase() }}</div>
+            <div class="student-copy">
+              <strong>{{ aluno.nome }}</strong>
+              <span>Cadastro ativo</span>
+            </div>
+          </div>
+          <button
+            class="delete-button"
+            type="button"
+            [attr.aria-label]="'Excluir ' + aluno.nome"
+            title="Excluir aluno"
+            (click)="excluirAluno(aluno.index)"
+          >
+            <span aria-hidden="true">×</span>
+          </button>
+        </article>
+      </section>
+
+      <footer class="card-footer">
+        <span><span class="footer-dot"></span> Lista atualizada automaticamente</span>
+        <span>{{ alunos.length }} {{ alunos.length === 1 ? 'aluno cadastrado' : 'alunos cadastrados' }}</span>
+      </footer>
+    </section>
+
+    <footer class="page-footer">Feito para facilitar a organização da sua turma.</footer>
   </section>
 </main>
