@@ -11,7 +11,16 @@ import { FormsModule } from '@angular/forms';
 })
 export class App {
   nomeAluno = '';
+  busca = '';
   alunos: string[] = [];
+
+  get alunosFiltrados(): { nome: string; index: number }[] {
+    const termo = this.busca.trim().toLocaleLowerCase('pt-BR');
+
+    return this.alunos
+      .map((nome, index) => ({ nome, index }))
+      .filter((aluno) => aluno.nome.toLocaleLowerCase('pt-BR').includes(termo));
+  }
 
   cadastrarAluno(): void {
     const nome = this.nomeAluno.trim();
